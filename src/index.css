@@ -338,6 +338,16 @@ nav.open {
   cursor: pointer;
 }
 
+.centralizar{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.gap{
+  margin-top: 5dvh;
+}
+
 
 
 
