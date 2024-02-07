@@ -6,6 +6,8 @@ import './index.css';
 import Funcionarios from './funcionarios';
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import PainelGeral from './painelGeral';
+import Clientes from './Clientes';
+
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -21,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: '/funcionarios',
         element: <Funcionarios/>,
+      },
+      {
+        path: '/clientes',
+        element: <Clientes/>,
       },
     ]
   }

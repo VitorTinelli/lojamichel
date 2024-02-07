@@ -18,38 +18,57 @@ export default function Funcionarios() {
     const [newSalario, setNewSalario] = useState()
     const [changeSort, setChangeSort] = useState(1)
     const [selectedFuncionario, setSelectedFuncionario] = useState("");
-    
+    const [anyChange, setAnyChange] = useState(false)
+
     ReactModal.setAppElement('#root');
 
     useEffect(() => {
         const fetchFuncionarios = async () => {
             try {
-                const { data, error } = await supabase
+                const { data: funcionarios, error: funcionariosError } = await supabase
                     .from("vendedores")
                     .select("id, nome, comissao, salario");
-                if (error) {
-                    throw error;
-                }
-                if (changeSort === 1) {
-                    setFunc(data.sort((a, b) => a.nome.localeCompare(b.nome)));
-                } else if (changeSort === 2) {
-                    setFunc(data.sort((a, b) => b.nome.localeCompare(a.nome)));
-                } else if (changeSort === 3) {
-                    setFunc(data.sort((a, b) => b.comissao - a.comissao));
-                } else if (changeSort === 4) {
-                    setFunc(data.sort((a, b) => a.comissao - b.comissao));
-                } else if (changeSort === 5) {
-                    setFunc(data.sort((a, b) => a.salario - b.salario));
-                } else if (changeSort === 6) {
-                    setFunc(data.sort((a, b) => b.salario - a.salario));
+
+                const { data: vendas, error: vendasError } = await supabase
+                    .from('vendas')
+                    .select('valorTotal, vendedorID');
+
+                if (funcionariosError) {
+                    throw funcionariosError;
                 }
 
+                if (vendasError) {
+                    throw vendasError;
+                }
+
+                const funcionariosWithVendas = funcionarios.map((funcionario) => {
+                    const vendasDoFuncionario = vendas.filter((venda) => venda.vendedorID === funcionario.id);
+                    const totalVendas = vendasDoFuncionario.reduce((total, venda) => total + venda.valorTotal, 0);
+                    return {
+                        ...funcionario,
+                        totalVendas,
+                    };
+                });
+
+                if (changeSort === 1) {
+                    setFunc(funcionariosWithVendas.sort((a, b) => a.nome.localeCompare(b.nome)));
+                } if (changeSort === 2) {
+                    setFunc(funcionariosWithVendas.sort((a, b) => b.nome.localeCompare(a.nome)));
+                } if (changeSort === 3) {
+                    setFunc(funcionariosWithVendas.sort((a, b) => a.comissao - b.comissao));
+                } if (changeSort === 4) {
+                    setFunc(funcionariosWithVendas.sort((a, b) => b.comissao - a.comissao));
+                } if (changeSort === 5) {
+                    setFunc(funcionariosWithVendas.sort((a, b) => a.salario - b.salario));
+                } if (changeSort === 6) {
+                    setFunc(funcionariosWithVendas.sort((a, b) => b.salario - a.salario));
+                }
             } catch (error) {
                 console.error("Erro ao buscar funcionários:", error.message);
             }
         };
         fetchFuncionarios();
-    })
+    }, [changeSort, anyChange])
 
     const salvarBanco = async () => {
         const { error } = await supabase
@@ -63,7 +82,9 @@ export default function Funcionarios() {
         }
         setIsModalNewOpen(!isModalNewOpen)
         setNewComissao()
+        setNewSalario()
         setNewFunc()
+        setAnyChange(!anyChange)
     }
 
     const editarFuncionario = (funcionario) => {
@@ -82,16 +103,20 @@ export default function Funcionarios() {
                         <div className="modal-container">
                             <div>
                                 <p className="tittle">Nome</p>
-                                <input type="text" name="newFunc" id="newFunc" placeholder="Funcionario" required value={newFunc} onChange={(e) => setNewFunc(e.target.value)} className="input" />
+                                <input type="text" name="newFunc" id="newFunc" placeholder="Funcionario"
+                                    required value={newFunc} onChange={(e) => setNewFunc(e.target.value)} className="input" />
                             </div>
 
                             <div>
                                 <p className="tittle">Comissão</p>
-                                <input type="text" name="newComissao" id="newComissao" placeholder="Comissão" required value={newComissao} onChange={(e) => setNewComissao(e.target.value)} className="input" />
+                                <input type="text" name="newComissao" id="newComissao"
+                                    placeholder="Comissão" required value={newComissao}
+                                    onChange={(e) => setNewComissao(e.target.value)} className="input" />
                             </div>
                             <div>
                                 <p className="tittle">Salário</p>
-                                <input type="text" name="newSalario" id="newSalario" placeholder="Salário" required value={newSalario} onChange={(e) => setNewSalario(e.target.value)} className="input" />
+                                <input type="text" name="newSalario" id="newSalario" placeholder="Salário"
+                                    required value={newSalario} onChange={(e) => setNewSalario(e.target.value)} className="input" />
                             </div>
 
 
@@ -122,17 +147,22 @@ export default function Funcionarios() {
                             }}>
                                 Comissão
                             </th>
+                            <th className="noClick">
+                                Total em vendas:
+                            </th>
+                            <th className="noClick">
+                                Total em comissão:
+                            </th>
                             <th className="pointer" onClick={() => {
                                 if (changeSort !== 5) {
                                     setChangeSort(5);
                                 } else if (changeSort === 5) {
                                     setChangeSort(6);
                                 }
-                                console.log(changeSort)
                             }}>
                                 Salário
                             </th>
-                            <th>
+                            <th className="noClick">
                                 Ações
                             </th>
                         </thead>
@@ -144,6 +174,12 @@ export default function Funcionarios() {
                                     </td>
                                     <td>
                                         {funcionario.comissao.toFixed(2)}%
+                                    </td>
+                                    <td>
+                                        R$ {funcionario.totalVendas.toFixed(2)}
+                                    </td>
+                                    <td>
+                                        R$ {(funcionario.totalVendas * (funcionario.comissao / 100)).toFixed(2)}
                                     </td>
                                     <td>
                                         R$ {funcionario.salario.toFixed(2)}
@@ -158,6 +194,7 @@ export default function Funcionarios() {
                                                         .from('vendedores')
                                                         .delete()
                                                         .eq('id', funcionario.id);
+                                                    setAnyChange(!anyChange)
                                                 }
                                             }}>Excluir</button>
                                             <ReactModal isOpen={isModalOpen} >
@@ -170,7 +207,7 @@ export default function Funcionarios() {
                                                             id="func"
                                                             placeholder="Funcionario"
                                                             required
-                                                            value={changeFunc || (selectedFuncionario && selectedFuncionario.nome)}
+                                                            value={changeFunc !== undefined && changeFunc !== null ? changeFunc : (selectedFuncionario && selectedFuncionario.nome)}
                                                             onChange={(e) => setChangeFunc(e.target.value)}
                                                             className="input"
                                                         />
@@ -185,7 +222,7 @@ export default function Funcionarios() {
                                                             id="comissao"
                                                             placeholder="Comissão"
                                                             required
-                                                            value={changeComissao || (selectedFuncionario && selectedFuncionario.comissao)}
+                                                            value={changeComissao !== undefined && changeComissao !== null ? changeComissao : (selectedFuncionario && selectedFuncionario.comissao)}
                                                             onChange={(e) => setChangeComissao(e.target.value)}
                                                             className="input"
                                                         />
@@ -199,7 +236,7 @@ export default function Funcionarios() {
                                                             id="salario"
                                                             placeholder="Salário"
                                                             required
-                                                            value={changeSalario || (selectedFuncionario && selectedFuncionario.salario)}
+                                                            value={changeSalario !== undefined && changeSalario !== null ? changeSalario : (selectedFuncionario && selectedFuncionario.salario)}
                                                             onChange={(e) => setChangeSalario(e.target.value)}
                                                             className="input"
                                                         />
@@ -210,8 +247,9 @@ export default function Funcionarios() {
                                                             await supabase
                                                                 .from("vendedores")
                                                                 .update({ nome: changeFunc, comissao: changeComissao, salario: changeSalario })
-                                                                .eq("id", funcionario.id);
+                                                                .eq("id", selectedFuncionario.id);
                                                             setIsModalOpen(false);
+                                                            setAnyChange(!anyChange)
                                                         }}> Salvar</button>
                                                         <button className="buttonActionCancel" onClick={() => setIsModalOpen(!isModalOpen)}>Sair</button>
                                                     </div>
@@ -225,10 +263,11 @@ export default function Funcionarios() {
                     </table>
                     <table className="gap">
                         <thead>
-                            <th>
+                            <th className="noClick">
                                 Total de salário:
                             </th>
-                            <th>Total de comissão:</th>
+                            <th className="noClick">Total de comissão:</th>
+                            <th className="noClick">Total a pagar:</th>
                         </thead>
                         <tbody>
                             <tr >
@@ -236,7 +275,10 @@ export default function Funcionarios() {
                                     R$ {func.reduce((total, funcionario) => total + funcionario.salario, 0).toFixed(2)}
                                 </td>
                                 <td>
-                                    R$ {comissao}
+                                    R$ {func.reduce((total, funcionario) => total + funcionario.totalVendas * (funcionario.comissao / 100), 0).toFixed(2)}
+                                </td>
+                                <td>
+                                    R$ {func.reduce((total, funcionario) => total + funcionario.salario + funcionario.totalVendas * (funcionario.comissao / 100), 0).toFixed(2)}
                                 </td>
                             </tr>
                         </tbody>

@@ -44,8 +44,6 @@ export default function PainelGeral() {
                     throw error;
                 }
                 setVendas(data.reverse());
-                console.log(vendas)
-
                 const clientIDs = data.map((venda) => venda.clienteID);
                 const { data: clientData, error: clientError } = await supabase
                     .from("clientes")

@@ -122,7 +122,7 @@ content {
   justify-content: center;
   align-items: center;
   color: #FFFFFF;
-  border-style:none;
+  border-style: none;
   border-radius: 8px;
   border-color: #FFF;
   background: var(--iOS-Pink, #121111);
@@ -151,7 +151,7 @@ th {
   padding-bottom: 12px;
   text-align: left;
   background-color: var(--iOS-Pink, #332f2f);
-    color: white;
+  color: white;
 }
 
 table {
@@ -160,21 +160,26 @@ table {
   width: 100%;
 }
 
-table td, table th {
+table td,
+table th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-table tr:nth-child(even){background-color: #f2f2f2;}
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
 
-table tr:hover {background-color: #ddd;}
+table tr:hover {
+  background-color: #ddd;
+}
 
 
-main{
+main {
   min-height: 76dvh;
 }
 
-nav{
+nav {
   background-color: #EEE;
   border-right: 2px solid;
   color: black;
@@ -187,20 +192,22 @@ nav{
   transform: translateX(-100%);
 }
 
-nav ul{
+nav ul {
   padding: 0;
   list-style-type: none;
   margin: 0;
 }
-nav ul li{
-  border-bottom: 2px solid ;
+
+nav ul li {
+  border-bottom: 2px solid;
   padding: 20px;
 }
-nav ul li a{
+
+nav ul li a {
   text-decoration: none;
 }
 
-nav ul li a:hover{
+nav ul li a:hover {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -208,7 +215,8 @@ nav ul li a:hover{
 nav.open {
   transform: translateX(0);
 }
-.pointer{
+
+.pointer {
   cursor: pointer;
   user-select: none;
 }
@@ -219,7 +227,7 @@ nav.open {
   justify-content: center;
   align-items: center;
   color: #FFFFFF;
-  border-style:none;
+  border-style: none;
   border-radius: 8px;
   border-color: #FFF;
   background: var(--iOS-Pink, #121111);
@@ -231,13 +239,14 @@ nav.open {
 .buttonAction:hover {
   background-color: #2e272b;
 }
+
 .buttonContainer {
   display: flex;
   gap: 10px;
   margin-left: 10px;
 }
 
-.modal-container{
+.modal-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -246,20 +255,20 @@ nav.open {
   height: 100%;
 }
 
-.subtitle{
+.subtitle {
   margin-top: 0.5dvh;
   font-size: 10px;
   font-weight: bold;
 }
 
-.tittle{
+.tittle {
   margin-top: 1dvh;
   font-size: 10px;
   font-weight: bolder;
   margin-bottom: -1dvh;
 }
 
-.buttonsSpacing{
+.buttonsSpacing {
   margin-top: 10dvh;
   display: flex;
   flex-direction: row;
@@ -272,17 +281,19 @@ nav.open {
   justify-content: center;
   align-items: center;
   color: #FFFFFF;
-  border-style:none;
+  border-style: none;
   border-radius: 8px;
   border-color: #FFF;
   background: var(--iOS-Pink, #d23333);
   width: 10dvh;
   cursor: pointer;
   flex-direction: column;
+  user-select: none;
 }
 
 .buttonActionCancel:hover {
-  background-color:#ff0000;
+  background-color: #ff0000;
+  user-select: none;
 }
 
 .buttonActionNew {
@@ -291,17 +302,19 @@ nav.open {
   justify-content: center;
   align-items: center;
   color: #FFFFFF;
-  border-style:none;
+  border-style: none;
   border-radius: 8px;
   border-color: #FFF;
   background: var(--iOS-Pink, #14e409);
   width: 10dvh;
   cursor: pointer;
   flex-direction: column;
+  user-select: none;
 }
 
 .buttonActionNew:hover {
   background-color: #2bff00;
+  user-select: none;
 }
 
 .buttonActionChange {
@@ -310,20 +323,22 @@ nav.open {
   justify-content: center;
   align-items: center;
   color: #FFFFFF;
-  border-style:none;
+  border-style: none;
   border-radius: 8px;
   border-color: #FFF;
   background: var(--iOS-Pink, #e4e009);
   width: 10dvh;
   cursor: pointer;
   flex-direction: column;
+  user-select: none;
 }
 
 .buttonActionChange:hover {
   background-color: rgb(255, 251, 0);
+  user-select: none;
 }
 
-.textNew{
+.textNew {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -333,23 +348,34 @@ nav.open {
   margin-bottom: 7dvh;
   color: #14e409;
 }
-.textNew:hover{
+
+.textNew:hover {
   color: #0dff00;
   cursor: pointer;
 }
 
-.centralizar{
+.centralizar {
   justify-content: center;
   align-items: center;
   display: flex;
 }
 
-.gap{
+.gap {
   margin-top: 5dvh;
 }
 
+.noClick{
+  user-select: none;
+}
 
+.row{
+  flex-direction: row;
+  display: flex;
+  gap: 2dvh;
+}
 
-
-
-
+.row-text{
+  flex-direction: row;
+  display: flex;
+  gap: 20dvh;
+}
