@@ -18,6 +18,7 @@ export default function Clientes() {
   const [anyChange, setAnyChange] = useState(false)
   const [addInteresse, setAddInteresse] = useState(false);
   const [changeInteresseField, setChangeInteresseField] = useState(0)
+  const [search, setSearch] = useState() 
   const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 
   //variaveis para adicionar novo cliente
@@ -33,7 +34,7 @@ export default function Clientes() {
   const [newCelular, setNewCelular] = useState()
   const [newNascimento, setNewNascimento] = useState()
   const [newInteresse, setNewInteresse] = useState()
-  
+
 
   //variaveis para editar cliente
   const [selectedCliente, setSelectedCliente] = useState("");
@@ -48,7 +49,7 @@ export default function Clientes() {
   const [changeTelefone, setChangeTelefone] = useState()
   const [changeCelular, setChangeCelular] = useState()
   const [changeNascimento, setChangeNascimento] = useState()
-  const [changeInteresse, setChangeInteresse ] = useState(0)
+  const [changeInteresse, setChangeInteresse] = useState(0)
 
   ReactModal.setAppElement('#root');
 
@@ -75,7 +76,7 @@ export default function Clientes() {
       }
     };
     fetchClientes();
-  }, [changeSort, anyChange, clientes]);
+  }, [changeSort, anyChange]);
 
   const salvarBanco = async () => {
     const { error } = await supabase
@@ -110,6 +111,23 @@ export default function Clientes() {
     setAddInteresse(true);
   };
 
+  const handleSearch = async (e) => {
+    if (e.key === 'Enter') {
+      try {
+        const { data, error } = await supabase
+          .from("clientes")
+          .select("id, nome, cpf, rua, bairro, cidade, estado, nres, ap, telefone, celular, aniversario")
+          .ilike('nome', `%${search}%`);
+        if (error) {
+          throw error;
+        }
+        setClientes(data);
+      } catch (error) {
+        console.error("Erro ao buscar clientes:", error.message);
+      }
+    }
+  }
+
   const fetchInteresses = async (clienteId) => {
     try {
       const { data, error } = await supabase
@@ -139,7 +157,10 @@ export default function Clientes() {
         <Header />
         <main>
           <h1 className="titulo">Clientes:</h1>
-          <p className="textNew" onClick={() => setIsModalNewOpen(!isModalNewOpen)}>Novo Cliente</p>
+          <div className="row" id="center">
+            <input type="text" id="search" placeholder="Pesquisar" className="input" value={search} onChange={(e) => setSearch(e.target.value)} onKeyUpCapture={handleSearch}/>
+            <button className="buttonActionNew" onClick={() => setIsModalNewOpen(!isModalNewOpen)}>Novo Cliente</button>
+          </div>
           <ReactModal isOpen={isModalNewOpen} >
             <div className="modal-container">
               <div>
@@ -265,25 +286,25 @@ export default function Clientes() {
                               {interesses.map((interesse) => (
                                 <tr key={interesse.id}>
                                   <td>{interesse.id}</td>
-                                  <td onClick={() => {setChangeInteresseField(interesse.id); setChangeInteresse(interesse.interesse)}}>{changeInteresseField === interesse.id ? (<input
-                                      type="text"
-                                      onBlur={() => setChangeInteresseField(0)}
-                                      className="input"
-                                      placeholder="Alterar Interesse"
-                                      value={changeInteresse !== null && changeInteresse !== undefined ? changeInteresse : interesse.interesse}
-                                      onChange={(e) => setChangeInteresse(e.target.value)}
-                                      onKeyDown={async (e) => {
-                                        if (e.key === 'Enter') {
-                                          await supabase
-                                            .from('interesses')
-                                            .update([{ interesse: changeInteresse }])
-                                            .eq('id', interesse.id)
-                                          setAnyChange(!anyChange);
-                                          setChangeInteresseField(0);
-                                          fetchInteresses(selectedCliente.id)
-                                        }
-                                      }}
-                                    />
+                                  <td onClick={() => { setChangeInteresseField(interesse.id); setChangeInteresse(interesse.interesse) }}>{changeInteresseField === interesse.id ? (<input
+                                    type="text"
+                                    onBlur={() => setChangeInteresseField(0)}
+                                    className="input"
+                                    placeholder="Alterar Interesse"
+                                    value={changeInteresse !== null && changeInteresse !== undefined ? changeInteresse : interesse.interesse}
+                                    onChange={(e) => setChangeInteresse(e.target.value)}
+                                    onKeyDown={async (e) => {
+                                      if (e.key === 'Enter') {
+                                        await supabase
+                                          .from('interesses')
+                                          .update([{ interesse: changeInteresse }])
+                                          .eq('id', interesse.id)
+                                        setAnyChange(!anyChange);
+                                        setChangeInteresseField(0);
+                                        fetchInteresses(selectedCliente.id)
+                                      }
+                                    }}
+                                  />
                                   ) : (
                                     interesse.interesse
                                   )}</td>
@@ -338,17 +359,6 @@ export default function Clientes() {
                         </div>
                       </ReactModal>
                       <button className="buttonActionChange" onClick={() => editarCliente(cliente)} >Alterar</button>
-                      <button className="buttonActionCancel" onClick={async () => {
-                        const confirmar = window.confirm(`Você realmente deseja excluir o cliente: ${cliente.nome}?`);
-                        if (confirmar) {
-                          await supabase
-                            .from('clientes')
-                            .delete()
-                            .eq('id', cliente.id)
-                          setAnyChange(!anyChange)
-                        }
-                      }}>Excluir</button>
-
 
                       <ReactModal isOpen={isModalOpen} >
                         <div className="modal-container">
@@ -533,6 +543,16 @@ export default function Clientes() {
                               setAnyChange(!anyChange)
                               setIsModalOpen(false);
                             }}> Salvar</button>
+                            <button className="buttonActionChange" onClick={async () => {
+                              const confirmar = window.confirm(`Você realmente deseja excluir o cliente: ${selectedCliente.nome}?`);
+                              if (confirmar) {
+                                await supabase
+                                  .from('clientes')
+                                  .delete()
+                                  .eq('id', selectedCliente.id)
+                                setAnyChange(!anyChange)
+                              }
+                            }}>Excluir</button>
                             <button className="buttonActionCancel" onClick={() => setIsModalOpen(!isModalOpen)}>Sair</button>
                           </div>
                         </div>

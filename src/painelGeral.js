@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./index.js";
 import Header from "./modules/header.js";
 import supabase from "./supabase.js"
@@ -7,18 +6,10 @@ import Footer from "./modules/footer.js";
 
 export default function PainelGeral() {
     const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo' });
-    const navigate = useNavigate()
     const [clientes, setClientes] = useState([])
     const [vendas, setVendas] = useState([])
     const [clientNames, setClientNames] = useState([]);
     const [vendedores, setVendedores] = useState([]);
-
-    const CheckLogin = async () => {
-        const check = await supabase.auth.getSession();
-        if (check.data.session == null) {
-            navigate('/');
-        }
-    }
 
     useEffect(() => {
         const fetchClientes = async () => {
@@ -76,7 +67,6 @@ export default function PainelGeral() {
         };
         fetchClientes();
         fetchVendas();
-        CheckLogin();
     }, []);
 
 
