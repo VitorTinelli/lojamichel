@@ -32,33 +32,38 @@ export default function Header() {
     }
 
     return (
-                <header>
-                    <img src="https://cdn-icons-png.flaticon.com/512/56/56763.png" height={"30dvh"} onClick={openDrawer} className="pointer"></img>
-                    <nav>
-                        <ul>
-                            <li>
-                                <a>Vendas</a>
-                            </li>
-                            <li>
-                                <a onClick={() => navigate('/clientes')}>Clientes</a>
-                            </li>
-                            <li>
-                                <a onClick={() => navigate('/funcionarios')}>Funcionários</a>
-                            </li>
-                            <li>
-                                <a>Recebidos</a>
-                            </li>
-                            <li>
-                                <a>Receber</a>
-                            </li>
-                        </ul>
-
-                    </nav>
-                    <img src={baixados} onClick={() => navigate('/')} className="pointer"/>
-                    <form>
-                        <div>
-                            <input type="submit" onClick={LogOut} value="LogOut" />
-                        </div>
-                    </form>
-                </header>
-    )}
+        <header>
+            <img src="https://cdn-icons-png.flaticon.com/512/56/56763.png" height={"30dvh"} onClick={openDrawer} className="pointer"></img>
+            <nav>
+                <div>
+                    <ul>
+                        <li>
+                            <a>Vendas</a>
+                        </li>
+                        <li onClick={() => navigate('/clientes')}>
+                            <a>Clientes</a>
+                        </li>
+                        <li onClick={() => navigate('/funcionarios')}>
+                            <a>Funcionários</a>
+                        </li>
+                        <li>
+                            <a>Recebidos</a>
+                        </li>
+                        <li>
+                            <a>Receber</a>
+                        </li>
+                        <li onClick={openDrawer}>
+                            <a className="buttonActionCancel">Fechar</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <img src={baixados} onClick={() => navigate('/')} className="pointer" />
+            <form>
+                <div>
+                    <input type="submit" onClick={LogOut} value="LogOut" />
+                </div>
+            </form>
+        </header>
+    )
+}

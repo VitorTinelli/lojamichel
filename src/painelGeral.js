@@ -4,7 +4,6 @@ import "./index.js";
 import Header from "./modules/header.js";
 import supabase from "./supabase.js"
 import Footer from "./modules/footer.js";
-import baixados from "./sources/baixados.png"
 
 export default function PainelGeral() {
     const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo' });

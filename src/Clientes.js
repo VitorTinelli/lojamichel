@@ -11,11 +11,14 @@ export default function Clientes() {
   //variaveis para coletar dados do banco e funcionamento da pagina
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalNewOpen, setIsModalNewOpen] = useState(false);
+  const [isModalInteresseOpen, setIsModalInteresseOpen] = useState(false);
   const [clientes, setClientes] = useState([])
+  const [interesses, setInteresses] = useState([])
   const [changeSort, setChangeSort] = useState(1)
   const [anyChange, setAnyChange] = useState(false)
+  const [addInteresse, setAddInteresse] = useState(false);
   const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
-  
+
   //variaveis para adicionar novo cliente
   const [newCliente, setNewCliente] = useState()
   const [newCPF, setNewCPF] = useState()
@@ -28,6 +31,7 @@ export default function Clientes() {
   const [newTelefone, setNewTelefone] = useState()
   const [newCelular, setNewCelular] = useState()
   const [newNascimento, setNewNascimento] = useState()
+  const [newInteresse, setNewInteresse] = useState()
 
   //variaveis para editar cliente
   const [selectedCliente, setSelectedCliente] = useState("");
@@ -42,6 +46,7 @@ export default function Clientes() {
   const [changeTelefone, setChangeTelefone] = useState()
   const [changeCelular, setChangeCelular] = useState()
   const [changeNascimento, setChangeNascimento] = useState()
+
 
   ReactModal.setAppElement('#root');
 
@@ -98,6 +103,33 @@ export default function Clientes() {
     setIsModalOpen(!isModalOpen)
     setSelectedCliente(cliente)
   }
+
+  const handleAddInteresseClick = () => {
+    setAddInteresse(true);
+  };
+
+  const fetchInteresses = async (clienteId) => {
+    try {
+      const { data, error } = await supabase
+        .from('interesses')
+        .select('id, interesse')
+        .eq('clienteID', clienteId);
+
+      if (error) {
+        throw error;
+      }
+      setInteresses(data);
+      console.log(data)
+    } catch (error) {
+      console.error("Erro ao buscar interesses:", error.message);
+    }
+  };
+
+  const verInteresses = (cliente) => {
+    setIsModalInteresseOpen(true);
+    setSelectedCliente(cliente);
+    fetchInteresses(cliente.id);
+  };
 
   return (
     <main>
@@ -169,8 +201,8 @@ export default function Clientes() {
               </div>
               <div>
                 <p className="tittle">Nascimento</p>
-                <input type="date" name="newClienteNascimento" id="newClienteNascimento" placeholder="Nascimento" required value={newNascimento} 
-                onChange={(e) => setNewNascimento(e.target.value)} className="input"/>
+                <input type="date" name="newClienteNascimento" id="newClienteNascimento" placeholder="Nascimento" required value={newNascimento}
+                  onChange={(e) => setNewNascimento(e.target.value)} className="input" />
               </div>
               <div>
                 <p className="subtitle">* Indica os campos obrigatórios.</p>
@@ -210,6 +242,80 @@ export default function Clientes() {
                   <td>{formatter.format(new Date(cliente.aniversario))}</td>
                   <td>
                     <div className="buttonContainer">
+                      <button onClick={() => verInteresses(cliente)} className="buttonActionNew">Interesses</button>
+                      <ReactModal isOpen={isModalInteresseOpen} >
+                        <div className="modal-container">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>
+                                  Id
+                                </th>
+                                <th>
+                                  Interesse do Cliente: {selectedCliente.nome}
+                                </th>
+                                <th>
+                                  Ações
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {interesses.map((interesse) => (
+                                <tr key={interesse.id}>
+                                  <td>{interesse.id}</td>
+                                  <td>{interesse.interesse}</td>
+                                  <td>
+                                    <button className="buttonActionCancel" onClick={async () => {
+                                      const confirmar = window.confirm(`Você realmente deseja excluir o interesse: ${interesse.interesse}?`);
+                                      if (confirmar) {
+                                        await supabase
+                                          .from('interesses')
+                                          .delete()
+                                          .eq('id', interesse.id)
+                                        setAnyChange(!anyChange);
+                                        fetchInteresses(selectedCliente.id);
+                                      }
+                                    }}>Excluir</button>
+                                  </td>
+                                </tr>
+                              ))}
+                              <tr>
+                                <td>+</td>
+                                <td onClick={handleAddInteresseClick}>
+                                  {addInteresse ? (
+                                    <input
+                                      type="text"
+                                      onBlur={() => setAddInteresse(false)}
+                                      className="input"
+                                      placeholder="Adicionar Interesse"
+                                      value={newInteresse}
+                                      onChange={(e) => setNewInteresse(e.target.value)}
+                                      onKeyDown={async (e) => {
+                                        if (e.key === 'Enter') {
+                                          await supabase
+                                            .from('interesses')
+                                            .insert([{ clienteID: selectedCliente.id, interesse: e.target.value }]);
+                                          setAnyChange(!anyChange);
+                                          setAddInteresse(false);
+                                          fetchInteresses(selectedCliente.id);
+                                        }
+                                      }}
+                                    />
+                                  ) : (
+                                    "Adicionar Interesse"
+                                  )}
+                                </td>
+                                <td>
+                                  
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div className="buttonsSpacing">
+                            <button className="buttonActionCancel" onClick={() => setIsModalInteresseOpen(false)}>Sair</button>
+                          </div>
+                        </div>
+                      </ReactModal>
                       <button className="buttonActionChange" onClick={() => editarCliente(cliente)} >Alterar</button>
                       <button className="buttonActionCancel" onClick={async () => {
                         const confirmar = window.confirm(`Você realmente deseja excluir o cliente: ${cliente.nome}?`);
@@ -221,6 +327,8 @@ export default function Clientes() {
                           setAnyChange(!anyChange)
                         }
                       }}>Excluir</button>
+
+
                       <ReactModal isOpen={isModalOpen} >
                         <div className="modal-container">
                           <div>
@@ -253,15 +361,15 @@ export default function Clientes() {
                               onChange={(e) => setChangeCPF(e.target.value)}
                               className="input"
                             />
-                            <input 
-                            type="date" 
-                            name="aniversario" 
-                            id='aniversario' 
-                            placeholder="Nascimento"
-                            required
-                            value={changeNascimento !== null && changeNascimento !== undefined ? changeNascimento : (selectedCliente && selectedCliente.aniversario)}  
-                            onChange={(e) => setChangeNascimento(e.target.value)}
-                            className="input"
+                            <input
+                              type="date"
+                              name="aniversario"
+                              id='aniversario'
+                              placeholder="Nascimento"
+                              required
+                              value={changeNascimento !== null && changeNascimento !== undefined ? changeNascimento : (selectedCliente && selectedCliente.aniversario)}
+                              onChange={(e) => setChangeNascimento(e.target.value)}
+                              className="input"
                             />
                           </div>
                           <p className="subtitle">(Atual: {selectedCliente.cpf} / {(selectedCliente && selectedCliente.aniversario) ? formatter.format(new Date(selectedCliente.aniversario)) : ''})</p>

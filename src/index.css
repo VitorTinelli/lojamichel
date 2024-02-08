@@ -192,22 +192,23 @@ nav {
   transform: translateX(-100%);
 }
 
-nav ul {
+nav div ul {
   padding: 0;
   list-style-type: none;
   margin: 0;
+  width: 100%;
 }
 
-nav ul li {
+nav div ul li {
   border-bottom: 2px solid;
   padding: 20px;
 }
 
-nav ul li a {
+nav div ul li a {
   text-decoration: none;
 }
 
-nav ul li a:hover {
+nav div ul li a:hover {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -253,6 +254,8 @@ nav.open {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  margin: 1dvh;
+  margin-bottom: 1dvh;
 }
 
 .subtitle {
@@ -378,4 +381,19 @@ nav.open {
   flex-direction: row;
   display: flex;
   gap: 20dvh;
+}
+
+.close{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
+  border-style: none;
+  border-radius: 8px;
+  border-color: #FFF;
+  background: var(--iOS-Pink, #d23333);
+  width: 10dvh;
+  cursor: pointer;
+  flex-direction: column;
+  user-select: none;
 }
