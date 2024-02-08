@@ -17,6 +17,7 @@ export default function Clientes() {
   const [changeSort, setChangeSort] = useState(1)
   const [anyChange, setAnyChange] = useState(false)
   const [addInteresse, setAddInteresse] = useState(false);
+  const [changeInteresseField, setChangeInteresseField] = useState(0)
   const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 
   //variaveis para adicionar novo cliente
@@ -32,6 +33,7 @@ export default function Clientes() {
   const [newCelular, setNewCelular] = useState()
   const [newNascimento, setNewNascimento] = useState()
   const [newInteresse, setNewInteresse] = useState()
+  
 
   //variaveis para editar cliente
   const [selectedCliente, setSelectedCliente] = useState("");
@@ -46,7 +48,7 @@ export default function Clientes() {
   const [changeTelefone, setChangeTelefone] = useState()
   const [changeCelular, setChangeCelular] = useState()
   const [changeNascimento, setChangeNascimento] = useState()
-
+  const [changeInteresse, setChangeInteresse ] = useState(0)
 
   ReactModal.setAppElement('#root');
 
@@ -118,7 +120,7 @@ export default function Clientes() {
       if (error) {
         throw error;
       }
-      setInteresses(data);
+      setInteresses(data.sort((a, b) => a.id - b.id));
       console.log(data)
     } catch (error) {
       console.error("Erro ao buscar interesses:", error.message);
@@ -263,7 +265,28 @@ export default function Clientes() {
                               {interesses.map((interesse) => (
                                 <tr key={interesse.id}>
                                   <td>{interesse.id}</td>
-                                  <td>{interesse.interesse}</td>
+                                  <td onClick={() => {setChangeInteresseField(interesse.id); setChangeInteresse(interesse.interesse)}}>{changeInteresseField === interesse.id ? (<input
+                                      type="text"
+                                      onBlur={() => setChangeInteresseField(0)}
+                                      className="input"
+                                      placeholder="Alterar Interesse"
+                                      value={changeInteresse !== null && changeInteresse !== undefined ? changeInteresse : interesse.interesse}
+                                      onChange={(e) => setChangeInteresse(e.target.value)}
+                                      onKeyDown={async (e) => {
+                                        if (e.key === 'Enter') {
+                                          await supabase
+                                            .from('interesses')
+                                            .update([{ interesse: changeInteresse }])
+                                            .eq('id', interesse.id)
+                                          setAnyChange(!anyChange);
+                                          setChangeInteresseField(0);
+                                          fetchInteresses(selectedCliente.id)
+                                        }
+                                      }}
+                                    />
+                                  ) : (
+                                    interesse.interesse
+                                  )}</td>
                                   <td>
                                     <button className="buttonActionCancel" onClick={async () => {
                                       const confirmar = window.confirm(`Você realmente deseja excluir o interesse: ${interesse.interesse}?`);
@@ -305,9 +328,7 @@ export default function Clientes() {
                                     "Adicionar Interesse"
                                   )}
                                 </td>
-                                <td>
-                                  
-                                </td>
+                                <td></td>
                               </tr>
                             </tbody>
                           </table>
