@@ -11,7 +11,7 @@ export default function PainelGeral() {
             try {
                 const { data, error } = await supabase
                     .from("clientes")
-                    .select("id, nome, cpf, rua, bairro, cidade, estado, nres, ap, telefone, celular");
+                    .select("id, nome, cpf, rua, bairro, cidade, estado, nres, ap, celular");
                 if (error) {
                     throw error;
                 }
@@ -28,7 +28,6 @@ export default function PainelGeral() {
         <main>
             <>
                 <Header/>
-
                 <main>
                     <h1 className="titulo">Últimos cadastros:</h1>
                     <table className="table table-hover">
@@ -37,8 +36,7 @@ export default function PainelGeral() {
                                 <th>Nome</th>
                                 <th>CPF</th>
                                 <th>Endereço</th>
-                                <th>Cidade</th>
-                                <th>Telefone</th>
+                                <th>Cidade</th> 
                                 <th>Celular</th>
                             </tr>
                         </thead>
@@ -51,7 +49,6 @@ export default function PainelGeral() {
                                         <td>{cliente.cpf}</td>
                                         <td>{cliente.rua}, {cliente.nres} - {cliente.bairro} {cliente.ap}</td>
                                         <td>{cliente.cidade}, {cliente.estado}</td>
-                                        <td>{cliente.telefone}</td>
                                         <td>{cliente.celular}</td>
                                     </tr>
                                 ))}
