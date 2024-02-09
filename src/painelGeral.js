@@ -5,12 +5,7 @@ import supabase from "./supabase.js"
 import Footer from "./modules/footer.js";
 
 export default function PainelGeral() {
-    const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo' });
     const [clientes, setClientes] = useState([])
-    const [vendas, setVendas] = useState([])
-    const [clientNames, setClientNames] = useState([]);
-    const [vendedores, setVendedores] = useState([]);
-
     useEffect(() => {
         const fetchClientes = async () => {
             try {
@@ -25,48 +20,7 @@ export default function PainelGeral() {
                 console.error("Erro ao buscar clientes:", error.message);
             }
         };
-        const fetchVendas = async () => {
-            try {
-                const { data, error } = await supabase
-                    .from("vendas")
-                    .select("id, clienteID, vendedorID, valorTotal, formaPagamento, parcelas, valorParcelas, itens, totalpago, data, vencimento ");
-                if (error) {
-                    throw error;
-                }
-                setVendas(data.reverse());
-                const clientIDs = data.map((venda) => venda.clienteID);
-                const { data: clientData, error: clientError } = await supabase
-                    .from("clientes")
-                    .select("id, nome")
-                    .in("id", clientIDs);
-                if (clientError) {
-                    throw clientError;
-                }
-                const clientNamesMap = {};
-                clientData.forEach((cliente) => {
-                    clientNamesMap[cliente.id] = cliente.nome;
-                });
-                setClientNames(clientNamesMap);
-
-                const vendedorIDs = data.map((venda) => venda.vendedorID);
-                const { data: vendedorData, error: vendedorError } = await supabase
-                    .from("vendedores")
-                    .select("id, nome")
-                    .in("id", vendedorIDs);
-                if (vendedorError) {
-                    throw vendedorError;
-                }
-                const vendedorNamesMap = {};
-                vendedorData.forEach((vendedor) => {
-                    vendedorNamesMap[vendedor.id] = vendedor.nome;
-                });
-                setVendedores(vendedorNamesMap);
-            } catch (error) {
-                console.error("Erro ao buscar vendas:", error.message);
-            }
-        };
         fetchClientes();
-        fetchVendas();
     }, []);
 
 
@@ -76,36 +30,6 @@ export default function PainelGeral() {
                 <Header/>
 
                 <main>
-                    <h1 className="titulo">Últimas Vendas:</h1>
-                    <table className="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Cliente</th>
-                                <th>Vendedor</th>
-                                <th>F. Pagamento</th>
-                                <th>Parcelas</th>
-                                <th>Valor Total</th>
-                                <th>Data / Vencimento</th>
-                                <th>Pago</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {vendas
-                                .slice(0, 5)
-                                .map((venda) => (
-                                    <tr key={venda.id}>
-                                        <td>{clientNames[venda.clienteID]}</td>
-                                        <td>{vendedores[venda.vendedorID]}</td>
-                                        <td>{venda.formaPagamento}</td>
-                                        <td>{venda.parcelas}x {venda.valorParcelas}</td>
-                                        <td>{venda.valorTotal}</td>
-                                        <td>{formatter.format(vendas.data)}, {formatter.format(vendas.vencimento)}</td>
-                                        <td>{venda.totalpago ? "Sim" : "Não"}</td>
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </table>
-
                     <h1 className="titulo">Últimos cadastros:</h1>
                     <table className="table table-hover">
                         <thead>

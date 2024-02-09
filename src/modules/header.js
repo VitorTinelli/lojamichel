@@ -37,28 +37,19 @@ export default function Header() {
             <nav>
                 <div>
                     <ul>
-                        <li>
-                            <a>Vendas</a>
-                        </li>
                         <li onClick={() => navigate('/clientes')}>
                             <a>Clientes</a>
                         </li>
-                        <li onClick={() => navigate('/funcionarios')}>
-                            <a>Funcionários</a>
-                        </li>
-                        <li>
-                            <a>Recebidos</a>
-                        </li>
-                        <li>
-                            <a>Receber</a>
+                        <li onClick={() => navigate('/interesses')}>
+                            <a>Interesses</a>
                         </li>
                         <li onClick={openDrawer}>
-                            <a className="buttonActionCancel">Fechar</a>
+                            <a><b>Fechar</b></a>
                         </li>
                     </ul>
                 </div>
             </nav>
-            <img src={baixados} onClick={() => navigate('/')} className="pointer" />
+            <img src={baixados} height={'80dvh'} onClick={() => navigate('/')} className="pointer" />
             <form>
                 <div>
                     <input type="submit" onClick={LogOut} value="LogOut" />

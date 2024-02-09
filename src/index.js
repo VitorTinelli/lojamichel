@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import Home from './Home';
 import './index.css';
-import Funcionarios from './funcionarios';
+import Interesses from './interesses';
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import PainelGeral from './painelGeral';
 import Clientes from './Clientes';
@@ -21,8 +21,8 @@ const router = createBrowserRouter([
         element: <PainelGeral/>,
       },
       {
-        path: '/funcionarios',
-        element: <Funcionarios/>,
+        path: '/interesses',
+        element: <Interesses/>,
       },
       {
         path: '/clientes',

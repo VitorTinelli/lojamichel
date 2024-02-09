@@ -127,7 +127,7 @@ export default function Clientes() {
       }
     }
   }
-
+  
   const fetchInteresses = async (clienteId) => {
     try {
       const { data, error } = await supabase
