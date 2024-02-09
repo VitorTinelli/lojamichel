@@ -30,7 +30,6 @@ export default function Clientes() {
   const [newEstado, setNewEstado] = useState()
   const [newNRES, setNewNRES] = useState()
   const [newAP, setNewAP] = useState()
-  const [newTelefone, setNewTelefone] = useState()
   const [newCelular, setNewCelular] = useState()
   const [newNascimento, setNewNascimento] = useState()
   const [newInteresse, setNewInteresse] = useState()
@@ -46,7 +45,6 @@ export default function Clientes() {
   const [changeEstado, setChangeEstado] = useState()
   const [changeNRES, setChangeNRES] = useState()
   const [changeAP, setChangeAP] = useState()
-  const [changeTelefone, setChangeTelefone] = useState()
   const [changeCelular, setChangeCelular] = useState()
   const [changeNascimento, setChangeNascimento] = useState()
   const [changeInteresse, setChangeInteresse] = useState(0)
@@ -58,7 +56,7 @@ export default function Clientes() {
       try {
         const { data, error } = await supabase
           .from("clientes")
-          .select("id, nome, cpf, rua, bairro, cidade, estado, nres, ap, telefone, celular, aniversario");
+          .select("id, nome, cpf, rua, bairro, cidade, estado, nres, ap, celular, aniversario");
         if (error) {
           throw error;
         }
@@ -90,7 +88,6 @@ export default function Clientes() {
         estado: newEstado,
         nres: newNRES,
         ap: newAP,
-        telefone: newTelefone,
         celular: newCelular,
         aniversario: newNascimento
       }
@@ -99,11 +96,12 @@ export default function Clientes() {
     if (error) {
       console.log("Erro ao inserir clientes:", error.message)
     }
+    setAnyChange(!anyChange)
     setIsModalNewOpen(!isModalNewOpen)
   }
 
   const editarCliente = (cliente) => {
-    setIsModalOpen(!isModalOpen)
+    setIsModalOpen(true)
     setSelectedCliente(cliente)
   }
 
@@ -116,7 +114,7 @@ export default function Clientes() {
       try {
         const { data, error } = await supabase
           .from("clientes")
-          .select("id, nome, cpf, rua, bairro, cidade, estado, nres, ap, telefone, celular, aniversario")
+          .select("id, nome, cpf, rua, bairro, cidade, estado, nres, ap, celular, aniversario")
           .ilike('nome', `%${search}%`);
         if (error) {
           throw error;
@@ -134,7 +132,6 @@ export default function Clientes() {
         .from('interesses')
         .select('id, interesse')
         .eq('clienteID', clienteId);
-
       if (error) {
         throw error;
       }
@@ -159,9 +156,9 @@ export default function Clientes() {
           <h1 className="titulo">Clientes:</h1>
           <div className="row" id="center">
             <input type="text" id="search" placeholder="Pesquisar" className="input" value={search} onChange={(e) => setSearch(e.target.value)} onKeyUpCapture={handleSearch}/>
-            <button className="buttonActionNew" onClick={() => setIsModalNewOpen(!isModalNewOpen)}>Novo Cliente</button>
+            <button className="buttonActionNew" onClick={() => setIsModalNewOpen(true)}>Novo Cliente</button>
           </div>
-          <ReactModal isOpen={isModalNewOpen} >
+          <ReactModal isOpen={isModalNewOpen} onRequestClose={() => setIsModalNewOpen(false)}>
             <div className="modal-container">
               <div>
                 <p className="tittle">Nome *</p>
@@ -212,12 +209,6 @@ export default function Clientes() {
               </div>
 
               <div>
-                <p className="tittle">Telefone</p>
-                <input type="text" name="newClienteTelefone" id="newClienteTelefone" placeholder="Telefone"
-                  required value={newTelefone} onChange={(e) => setNewTelefone(e.target.value)} className="input" />
-              </div>
-
-              <div>
                 <p className="tittle">Celular *</p>
                 <input type="text" name="newClienteCelular" id="newClienteCelular" placeholder="Celular"
                   required value={newCelular} onChange={(e) => setNewCelular(e.target.value)} className="input" />
@@ -233,7 +224,7 @@ export default function Clientes() {
 
               <div className="buttonsSpacing">
                 <button className="buttonActionNew" onClick={() => salvarBanco()}>Adicionar</button>
-                <button className="buttonActionCancel" onClick={() => setIsModalNewOpen(!isModalNewOpen)}>Sair</button>
+                <button className="buttonActionCancel" onClick={() => setIsModalNewOpen(false)}>Sair</button>
               </div>
             </div>
           </ReactModal>
@@ -247,7 +238,6 @@ export default function Clientes() {
                 <th>CPF</th>
                 <th>Endereço</th>
                 <th>Cidade</th>
-                <th>Telefone</th>
                 <th>Celular</th>
                 <th>Nascimento</th>
                 <th>Ações</th>
@@ -260,13 +250,12 @@ export default function Clientes() {
                   <td>{cliente.cpf}</td>
                   <td>{cliente.rua}, {cliente.nres} - {cliente.bairro} AP: {cliente.ap}</td>
                   <td>{cliente.cidade}, {cliente.estado}</td>
-                  <td>{cliente.telefone}</td>
                   <td>{cliente.celular}</td>
                   <td>{formatter.format(new Date(cliente.aniversario))}</td>
                   <td>
                     <div className="buttonContainer">
                       <button onClick={() => verInteresses(cliente)} className="buttonActionNew">Interesses</button>
-                      <ReactModal isOpen={isModalInteresseOpen} >
+                      <ReactModal isOpen={isModalInteresseOpen} onRequestClose={ () => setIsModalInteresseOpen(false)} >
                         <div className="modal-container">
                           <table>
                             <thead>
@@ -360,7 +349,7 @@ export default function Clientes() {
                       </ReactModal>
                       <button className="buttonActionChange" onClick={() => editarCliente(cliente)} >Alterar</button>
 
-                      <ReactModal isOpen={isModalOpen} >
+                      <ReactModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
                         <div className="modal-container">
                           <div>
                             <p className="tittle">Nome</p>
@@ -490,21 +479,6 @@ export default function Clientes() {
                             />
                           </div>
                           <p className="subtitle">(Atual: {selectedCliente.estado})</p>
-
-                          <div>
-                            <p className="tittle">Telefone</p>
-                            <input
-                              type="text"
-                              name="Telefone"
-                              id="Telefone"
-                              placeholder="Telefone"
-                              value={changeTelefone !== null && changeTelefone !== undefined ? changeTelefone : (selectedCliente && selectedCliente.telefone)}
-                              onChange={(e) => setChangeTelefone(e.target.value)}
-                              className="input"
-                            />
-                          </div>
-                          <p className="subtitle">(Atual: {selectedCliente.telefone})</p>
-
                           <div>
                             <p className="tittle">Celular</p>
                             <input
@@ -532,7 +506,6 @@ export default function Clientes() {
                                     estado: changeEstado,
                                     nres: changeNRES,
                                     ap: changeAP,
-                                    telefone: changeTelefone,
                                     celular: changeCelular,
                                     aniversario: changeNascimento
                                   })
@@ -553,7 +526,7 @@ export default function Clientes() {
                                 setAnyChange(!anyChange)
                               }
                             }}>Excluir</button>
-                            <button className="buttonActionCancel" onClick={() => setIsModalOpen(!isModalOpen)}>Sair</button>
+                            <button className="buttonActionCancel" onClick={() => setIsModalOpen(false)}>Sair</button>
                           </div>
                         </div>
                       </ReactModal>
