@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 import supabase from "../supabase.js"
@@ -7,6 +7,7 @@ import baixados from "../sources/baixados.png"
 export default function Header() {
     const navigate = useNavigate()
     const [navega, setNavega] = useState(0);
+    const navRef = useRef(null);
 
     async function LogOut(e) {
         e.preventDefault();
@@ -31,10 +32,22 @@ export default function Header() {
         }
     }
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (navRef.current && !navRef.current.contains(event.target) && navega === 1) {
+            openDrawer();
+          }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, [navega]);
+
     return (
         <header>
             <img src="https://cdn-icons-png.flaticon.com/512/56/56763.png" height={"30dvh"} onClick={openDrawer} className="pointer"></img>
-            <nav>
+            <nav ref={navRef}>
                 <div>
                     <ul>
                         <li onClick={() => navigate('/clientes')}>

@@ -18,7 +18,7 @@ export default function Clientes() {
   const [anyChange, setAnyChange] = useState(false)
   const [addInteresse, setAddInteresse] = useState(false);
   const [changeInteresseField, setChangeInteresseField] = useState(0)
-  const [search, setSearch] = useState() 
+  const [search, setSearch] = useState()
   const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 
   //variaveis para adicionar novo cliente
@@ -125,7 +125,7 @@ export default function Clientes() {
       }
     }
   }
-  
+
   const fetchInteresses = async (clienteId) => {
     try {
       const { data, error } = await supabase
@@ -153,10 +153,12 @@ export default function Clientes() {
       <>
         <Header />
         <main>
-          <h1 className="titulo">Clientes:</h1>
-          <div className="row" id="center">
-            <input type="text" id="search" placeholder="Pesquisar" className="input" value={search} onChange={(e) => setSearch(e.target.value)} onKeyUpCapture={handleSearch}/>
-            <button className="buttonActionNew" onClick={() => setIsModalNewOpen(true)}>Novo Cliente</button>
+          <div className="page-title">
+            <h1 className="titulo">Clientes:</h1>
+            <div className="row-buttons">
+              <input type="text" id="search" placeholder="Pesquisar" className="input" value={search} onChange={(e) => setSearch(e.target.value)} onKeyUpCapture={handleSearch} maxLength={'1dvh'} />
+                <button className="buttonActionNew" onClick={() => setIsModalNewOpen(true)}>Novo Cliente</button>
+            </div>
           </div>
           <ReactModal isOpen={isModalNewOpen} onRequestClose={() => setIsModalNewOpen(false)}>
             <div className="modal-container">
@@ -255,7 +257,7 @@ export default function Clientes() {
                   <td>
                     <div className="buttonContainer">
                       <button onClick={() => verInteresses(cliente)} className="buttonActionNew">Interesses</button>
-                      <ReactModal isOpen={isModalInteresseOpen} onRequestClose={ () => setIsModalInteresseOpen(false)} >
+                      <ReactModal isOpen={isModalInteresseOpen} onRequestClose={() => setIsModalInteresseOpen(false)} >
                         <div className="modal-container">
                           <table>
                             <thead>
@@ -524,6 +526,7 @@ export default function Clientes() {
                                   .delete()
                                   .eq('id', selectedCliente.id)
                                 setAnyChange(!anyChange)
+                                setIsModalOpen(false)
                               }
                             }}>Excluir</button>
                             <button className="buttonActionCancel" onClick={() => setIsModalOpen(false)}>Sair</button>

@@ -137,7 +137,6 @@ content {
 .titulo {
   text-align: center;
   font-size: 20px;
-  margin: 4dvh;
 }
 
 table {
@@ -254,7 +253,7 @@ nav.open {
   flex-direction: column;
   min-width: 100%;
   min-height: 100%;
-  overflow: scroll; 
+  overflow: scroll;
 }
 
 
@@ -368,23 +367,23 @@ nav.open {
   margin-top: 5dvh;
 }
 
-.noClick{
+.noClick {
   user-select: none;
 }
 
-.row{
+.row {
   flex-direction: row;
   display: flex;
   gap: 2dvh;
 }
 
-.row-text{
+.row-text {
   flex-direction: row;
   display: flex;
   gap: 20dvh;
 }
 
-.close{
+.close {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -399,12 +398,25 @@ nav.open {
   user-select: none;
 }
 
-#center {
+.page-title {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4dvh;
+  margin-top: 4dvh;
+  max-width: 100%;
+  margin-left: 10dvw;
+  margin-right: 10dvw;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1dvh;
+}
+
+.row-buttons {
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 1dvh;
-  margin-bottom: 2dvh;
+  display: flex;
+  gap: 2dvh;
 }
 
 #search {
