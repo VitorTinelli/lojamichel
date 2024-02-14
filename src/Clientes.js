@@ -22,30 +22,30 @@ export default function Clientes() {
   const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
 
   //variaveis para adicionar novo cliente
-  const [newCliente, setNewCliente] = useState()
-  const [newCPF, setNewCPF] = useState()
-  const [newRua, setNewRua] = useState()
-  const [newBairro, setNewBairro] = useState()
-  const [newCidade, setNewCidade] = useState()
-  const [newEstado, setNewEstado] = useState()
-  const [newNRES, setNewNRES] = useState()
-  const [newAP, setNewAP] = useState()
-  const [newCelular, setNewCelular] = useState()
+  const [newCliente, setNewCliente] = useState("")
+  const [newCPF, setNewCPF] = useState("")
+  const [newRua, setNewRua] = useState("")
+  const [newBairro, setNewBairro] = useState("")
+  const [newCidade, setNewCidade] = useState("")
+  const [newEstado, setNewEstado] = useState("")
+  const [newNRES, setNewNRES] = useState("")
+  const [newAP, setNewAP] = useState("")
+  const [newCelular, setNewCelular] = useState("")
   const [newNascimento, setNewNascimento] = useState()
-  const [newInteresse, setNewInteresse] = useState()
+  const [newInteresse, setNewInteresse] = useState("")
 
 
   //variaveis para editar cliente
   const [selectedCliente, setSelectedCliente] = useState("");
-  const [changeCliente, setChangeCliente] = useState()
-  const [changeCPF, setChangeCPF] = useState()
-  const [changeRua, setChangeRua] = useState()
-  const [changeBairro, setChangeBairro] = useState()
-  const [changeCidade, setChangeCidade] = useState()
-  const [changeEstado, setChangeEstado] = useState()
-  const [changeNRES, setChangeNRES] = useState()
-  const [changeAP, setChangeAP] = useState()
-  const [changeCelular, setChangeCelular] = useState()
+  const [changeCliente, setChangeCliente] = useState("")
+  const [changeCPF, setChangeCPF] = useState("")
+  const [changeRua, setChangeRua] = useState("")
+  const [changeBairro, setChangeBairro] = useState("")
+  const [changeCidade, setChangeCidade] = useState("")
+  const [changeEstado, setChangeEstado] = useState("")
+  const [changeNRES, setChangeNRES] = useState("")
+  const [changeAP, setChangeAP] = useState("")
+  const [changeCelular, setChangeCelular] = useState("")
   const [changeNascimento, setChangeNascimento] = useState()
   const [changeInteresse, setChangeInteresse] = useState(0)
 
@@ -80,15 +80,15 @@ export default function Clientes() {
     const { error } = await supabase
       .from('clientes')
       .insert([{
-        nome: newCliente,
-        cpf: newCPF,
-        rua: newRua,
-        bairro: newBairro,
-        cidade: newCidade,
-        estado: newEstado,
-        nres: newNRES,
-        ap: newAP,
-        celular: newCelular,
+        nome: newCliente.trim(),
+        cpf: newCPF.trim(),
+        rua: newRua.trim(),
+        bairro: newBairro.trim(),
+        cidade: newCidade.trim(),
+        estado: newEstado.trim().toUpperCase(),
+        nres: newNRES.trim(),
+        ap: newAP.trim(),
+        celular: newCelular.trim(),
         aniversario: newNascimento
       }
       ])
@@ -195,7 +195,7 @@ export default function Clientes() {
               <div>
                 <p className="tittle">Estado</p>
                 <input type="text" name="newClienteEstado" id="newClienteEstado" placeholder="Estado"
-                  required value={newEstado} onChange={(e) => setNewEstado(e.target.value.trim().toUpperCase())} className="input" />
+                  required value={newEstado} onChange={(e) => setNewEstado(e.target.value)} className="input" />
               </div>
 
               <div>
@@ -361,7 +361,7 @@ export default function Clientes() {
                               id="clientes"
                               placeholder="cliente"
                               required
-                              value={changeCliente !== null && changeCliente !== undefined ? changeCliente : (selectedCliente && selectedCliente.nome)}
+                              value={changeCliente !== null && changeCliente !== undefined && changeCliente !== "" ? changeCliente : (selectedCliente && selectedCliente.nome)}
                               onChange={(e) => setChangeCliente(e.target.value)}
                               className="input"
                             />                          </div>
@@ -378,7 +378,7 @@ export default function Clientes() {
                               id="CPF"
                               placeholder="CPF"
                               required
-                              value={changeCPF !== null && changeCPF !== undefined ? changeCPF : (selectedCliente && selectedCliente.cpf)}
+                              value={changeCPF !== null && changeCPF !== undefined && changeCPF !== "" ? changeCPF : (selectedCliente && selectedCliente.cpf)}
                               onChange={(e) => setChangeCPF(e.target.value)}
                               className="input"
                             />
@@ -405,7 +405,7 @@ export default function Clientes() {
                               id="rua"
                               placeholder="Rua"
                               required
-                              value={changeRua !== null && changeRua !== undefined ? changeRua : (selectedCliente && selectedCliente.rua)}
+                              value={changeRua !== null && changeRua !== undefined && changeRua !== ""? changeRua : (selectedCliente && selectedCliente.rua)}
                               onChange={(e) => setChangeRua(e.target.value)}
                               className="input"
                             />
@@ -415,7 +415,7 @@ export default function Clientes() {
                               id="numero"
                               placeholder="Numero da Residência"
                               required
-                              value={changeNRES !== null && changeNRES !== undefined ? changeNRES : (selectedCliente && selectedCliente.nres)}
+                              value={changeNRES !== null && changeNRES !== undefined && changeNRES !== "" ? changeNRES : (selectedCliente && selectedCliente.nres)}
                               onChange={(e) => setChangeNRES(e.target.value)}
                               className="input"
                             />
@@ -434,7 +434,7 @@ export default function Clientes() {
                               id="Bairro"
                               placeholder="Bairro"
                               required
-                              value={changeBairro !== null && changeBairro !== undefined ? changeBairro : (selectedCliente && selectedCliente.bairro)}
+                              value={changeBairro !== null && changeBairro !== undefined && changeBairro !== "" ? changeBairro : (selectedCliente && selectedCliente.bairro)}
                               onChange={(e) => setChangeBairro(e.target.value)}
                               className="input"
                             />
@@ -444,7 +444,7 @@ export default function Clientes() {
                               id="AP"
                               placeholder="AP"
                               required
-                              value={changeAP !== null && changeAP !== undefined ? changeAP : (selectedCliente && selectedCliente.ap)}
+                              value={changeAP !== null && changeAP !== undefined && changeAP !== "" ? changeAP : (selectedCliente && selectedCliente.ap)}
                               onChange={(e) => setChangeAP(e.target.value)}
                               className="input"
                             />
@@ -459,7 +459,7 @@ export default function Clientes() {
                               id="cidade"
                               placeholder="cidade"
                               required
-                              value={changeCidade !== null && changeCidade !== undefined ? changeCidade : (selectedCliente && selectedCliente.cidade)}
+                              value={changeCidade !== null && changeCidade !== undefined && changeCidade !== "" ? changeCidade : (selectedCliente && selectedCliente.cidade)}
                               onChange={(e) => setChangeCidade(e.target.value)}
                               className="input"
                             />
@@ -474,8 +474,8 @@ export default function Clientes() {
                               id="Estado"
                               placeholder="Estado"
                               required
-                              value={changeEstado !== null && changeEstado !== undefined ? changeEstado : (selectedCliente && selectedCliente.estado)}
-                              onChange={(e) => setChangeEstado(e.target.value.trim().toUpperCase())}
+                              value={changeEstado !== null && changeEstado !== undefined && changeEstado !== ""? changeEstado : (selectedCliente && selectedCliente.estado)}
+                              onChange={(e) => setChangeEstado(e.target.value.toUpperCase())}
                               className="input"
                             />
                           </div>
@@ -487,8 +487,8 @@ export default function Clientes() {
                               name="Celular"
                               id="Celular"
                               placeholder="Celular"
-                              value={changeCelular !== null && changeCelular !== undefined ? changeCelular : (selectedCliente && selectedCliente.celular)}
-                              onChange={(e) => setChangeCelular(e.target.value.trim())}
+                              value={changeCelular !== null && changeCelular !== undefined &&changeCelular !== "" ? changeCelular : (selectedCliente && selectedCliente.celular)}
+                              onChange={(e) => setChangeCelular(e.target.value)}
                               className="input"
                             />
                           </div>
@@ -499,15 +499,15 @@ export default function Clientes() {
                                 await supabase
                                   .from("clientes")
                                   .update({
-                                    nome: changeCliente,
-                                    cpf: changeCPF,
-                                    rua: changeRua,
-                                    bairro: changeBairro,
-                                    cidade: changeCidade,
-                                    estado: changeEstado,
-                                    nres: changeNRES,
-                                    ap: changeAP,
-                                    celular: changeCelular,
+                                    nome: changeCliente.trim(),
+                                    cpf: changeCPF.trim(),
+                                    rua: changeRua.trim(),
+                                    bairro: changeBairro.trim(),
+                                    cidade: changeCidade.trim(),
+                                    estado: changeEstado.trim(),
+                                    nres: changeNRES.trim(),
+                                    ap: changeAP.trim(),
+                                    celular: changeCelular.trim(),
                                     aniversario: changeNascimento
                                   })
                                   .eq("id", selectedCliente.id);
