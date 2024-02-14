@@ -195,7 +195,7 @@ export default function Clientes() {
               <div>
                 <p className="tittle">Estado</p>
                 <input type="text" name="newClienteEstado" id="newClienteEstado" placeholder="Estado"
-                  required value={newEstado} onChange={(e) => setNewEstado(e.target.value)} className="input" />
+                  required value={newEstado} onChange={(e) => setNewEstado(e.target.value.trim().toUpperCase())} className="input" />
               </div>
 
               <div>
@@ -364,8 +364,7 @@ export default function Clientes() {
                               value={changeCliente !== null && changeCliente !== undefined ? changeCliente : (selectedCliente && selectedCliente.nome)}
                               onChange={(e) => setChangeCliente(e.target.value)}
                               className="input"
-                            />
-                          </div>
+                            />                          </div>
                           <p className="subtitle">(Atual: {selectedCliente.nome})</p>
 
                           <div className="row-text">
@@ -476,7 +475,7 @@ export default function Clientes() {
                               placeholder="Estado"
                               required
                               value={changeEstado !== null && changeEstado !== undefined ? changeEstado : (selectedCliente && selectedCliente.estado)}
-                              onChange={(e) => setChangeEstado(e.target.value)}
+                              onChange={(e) => setChangeEstado(e.target.value.trim().toUpperCase())}
                               className="input"
                             />
                           </div>
@@ -489,7 +488,7 @@ export default function Clientes() {
                               id="Celular"
                               placeholder="Celular"
                               value={changeCelular !== null && changeCelular !== undefined ? changeCelular : (selectedCliente && selectedCliente.celular)}
-                              onChange={(e) => setChangeCelular(e.target.value)}
+                              onChange={(e) => setChangeCelular(e.target.value.trim())}
                               className="input"
                             />
                           </div>
@@ -517,6 +516,7 @@ export default function Clientes() {
                               }
                               setAnyChange(!anyChange)
                               setIsModalOpen(false);
+                              setChangeCliente(); setChangeCPF(); setChangeRua(); setChangeBairro(); setChangeCidade(); setChangeEstado(); setChangeNRES(); setChangeAP(); setChangeCelular(); setChangeNascimento(); setChangeInteresse();
                             }}> Salvar</button>
                             <button className="buttonActionChange" onClick={async () => {
                               const confirmar = window.confirm(`Você realmente deseja excluir o cliente: ${selectedCliente.nome}?`);
