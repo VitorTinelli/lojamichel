@@ -143,6 +143,7 @@ table {
   border: 1px solid #333;
   max-width: 80vw;
   margin: auto;
+  margin-bottom: 5dvh;
 }
 
 th {
