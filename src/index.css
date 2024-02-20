@@ -11,7 +11,7 @@ header {
   position: relative;
   box-shadow: 1px 1px 4px #81818133;
   display: flex;
-  height: 10dvh;
+  height: 15vh;
   width: 100%;
 }
 
@@ -186,7 +186,7 @@ nav {
   position: fixed;
   top: 0;
   left: 0;
-  width: 200px;
+  width: 300px;
   height: 100vh;
   z-index: 100;
   transform: translateX(-100%);
@@ -200,17 +200,20 @@ nav div ul {
 }
 
 nav div ul li {
-  border-bottom: 2px solid;
   padding: 20px;
+}
+
+nav div ul li:hover {
+  background-color: #72727245;
+  cursor: pointer;
 }
 
 nav div ul li a {
   text-decoration: none;
 }
 
-nav div ul li a:hover {
-  text-decoration: underline;
-  cursor: pointer;
+nav div ul li:hover {
+  font-style: italic;
 }
 
 nav.open {

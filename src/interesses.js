@@ -133,7 +133,7 @@ export default function Interesses() {
                     <button className="buttonActionNew" onClick={async () => {
                       await supabase
                         .from('interesses')
-                        .insert([{ clienteID: newCliente, interesse: newInteresse }])
+                        .insert([{ clienteID: newCliente, interesse: newInteresse.trim().toLowerCase() }])
                         .then(() => {
                           setAnyChange(!anyChange)
                           setIsModalNewOpen(!isModalNewOpen)
@@ -186,7 +186,7 @@ export default function Interesses() {
                             <button className="buttonActionNew" onClick={async () =>
                               await supabase
                                 .from('interesses')
-                                .update({ interesse: changeInteresse })
+                                .update({ interesse: changeInteresse.trim().toLocaleLowerCase() })
                                 .eq('id', selectedChange.id)
                                 .then(() => {
                                   setAnyChange(!anyChange)

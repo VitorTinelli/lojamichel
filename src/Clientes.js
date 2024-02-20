@@ -1,9 +1,12 @@
 import Header from "./modules/header";
 import Footer from "./modules/footer";
-import './index.css'
 import supabase from "./supabase";
 import { useEffect, useState } from "react";
 import ReactModal from 'react-modal';
+import { insertMaskInCpf } from "./mascaras/cpf.ts";
+import { insertMaskInPhone } from "./mascaras/phone.ts";
+import './index.css'
+
 
 
 export default function Clientes() {
@@ -47,7 +50,7 @@ export default function Clientes() {
   const [changeAP, setChangeAP] = useState("")
   const [changeCelular, setChangeCelular] = useState("")
   const [changeNascimento, setChangeNascimento] = useState()
-  const [changeInteresse, setChangeInteresse] = useState(0)
+  const [changeInteresse, setChangeInteresse] = useState("")
 
   ReactModal.setAppElement('#root');
 
@@ -249,10 +252,10 @@ export default function Clientes() {
               {clientes.map((cliente) => (
                 <tr key={cliente.id}>
                   <td>{cliente.nome}</td>
-                  <td>{cliente.cpf}</td>
+                  <td>{insertMaskInCpf(cliente.cpf)}</td>
                   <td>{cliente.rua}, {cliente.nres} - {cliente.bairro} AP: {cliente.ap}</td>
                   <td>{cliente.cidade}, {cliente.estado}</td>
-                  <td>{cliente.celular}</td>
+                  <td>{insertMaskInPhone(cliente.celular)}</td>
                   <td>{formatter.format(new Date(cliente.aniversario))}</td>
                   <td>
                     <div className="buttonContainer">
@@ -288,7 +291,7 @@ export default function Clientes() {
                                       if (e.key === 'Enter') {
                                         await supabase
                                           .from('interesses')
-                                          .update([{ interesse: changeInteresse }])
+                                          .update([{ interesse: changeInteresse.toLowerCase().trim()}])
                                           .eq('id', interesse.id)
                                         setAnyChange(!anyChange);
                                         setChangeInteresseField(0);
@@ -329,7 +332,7 @@ export default function Clientes() {
                                         if (e.key === 'Enter') {
                                           await supabase
                                             .from('interesses')
-                                            .insert([{ clienteID: selectedCliente.id, interesse: e.target.value }]);
+                                            .insert([{ clienteID: selectedCliente.id, interesse: e.target.value.trim().toLowerCase() }]);
                                           setAnyChange(!anyChange);
                                           setAddInteresse(false);
                                           fetchInteresses(selectedCliente.id);

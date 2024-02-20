@@ -1,7 +1,7 @@
-import '../index.css'
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import supabase from '../supabase';
+import '../index.css'
 
 export default function Footer() {
   const navigate = useNavigate();

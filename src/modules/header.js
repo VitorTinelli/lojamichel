@@ -1,8 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import supabase from "../supabase.js";
+import baixados from "../sources/baixados.png";
 import "../index.css";
-import supabase from "../supabase.js"
-import baixados from "../sources/baixados.png"
 
 export default function Header() {
     const navigate = useNavigate()
@@ -34,15 +34,15 @@ export default function Header() {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-          if (navRef.current && !navRef.current.contains(event.target) && navega === 1) {
-            openDrawer();
-          }
+            if (navRef.current && !navRef.current.contains(event.target) && navega === 1) {
+                openDrawer();
+            }
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
-      }, [navega]);
+    }, [navega]);
 
     return (
         <header>
@@ -50,12 +50,16 @@ export default function Header() {
             <nav ref={navRef}>
                 <div>
                     <ul>
+                        <li onClick={() => navigate('/')}>
+                            <a>Inicio</a>
+                        </li>
                         <li onClick={() => navigate('/clientes')}>
                             <a>Clientes</a>
                         </li>
                         <li onClick={() => navigate('/interesses')}>
                             <a>Interesses</a>
                         </li>
+
                         <li onClick={openDrawer}>
                             <a><b>Fechar</b></a>
                         </li>

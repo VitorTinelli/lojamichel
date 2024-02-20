@@ -1,12 +1,46 @@
 import { useEffect, useState } from "react";
-import "./index.js";
 import Header from "./modules/header.js";
 import supabase from "./supabase.js"
 import Footer from "./modules/footer.js";
+import styled from 'styled-components'
+import { Chart } from "react-google-charts";
+import "./index.js";
+import { insertMaskInCpf } from "./mascaras/cpf.ts";
+import { insertMaskInPhone } from "./mascaras/phone.ts";
 const formatter = new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC' });
+
+const Grafico = styled.div`
+    max-width: 80vw;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around
+`;
+
+const Data = styled.div`
+    margin-left: 10px;
+`;
+
+export const options = {
+    title: "Maiores interesses",
+    is3D: true,
+};
+
+export const data2 = [
+    ["Data", "Quantidade", { role: "style" }],
+    ["01/2024", 25, "#0099C6"],
+    ["02/2024", 45, "#0099C6"],
+    ["03/2024", 34, "#0099C6"],
+];
+
+export const options2 = {
+    title: "Clientes"
+};
 
 export default function PainelGeral() {
     const [clientes, setClientes] = useState([])
+    const [chartData, setChartData] = useState([["Interesses", "Quantidade"]]);
+
     useEffect(() => {
         const fetchClientes = async () => {
             try {
@@ -21,14 +55,54 @@ export default function PainelGeral() {
                 console.error("Erro ao buscar clientes:", error.message);
             }
         };
+
+        const fetchInteresses = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from("interesses")
+                    .select("id, interesse");
+                if (error) {
+                    throw error;
+                }
+                const chartData = data.reduce((acc, interesse) => {
+                    const index = acc.findIndex(([name]) => name === interesse.interesse);
+                    if (index === -1) {
+                        acc.push([interesse.interesse, 1]);
+                    } else {
+                        acc[index][1]++;
+                    }
+                    return acc;
+                }, [["Interesses", "Quantidade"]]); 
+                setChartData(chartData);
+            } catch (error) {
+                console.error("Erro ao buscar interesses:", error.message);
+            }
+        }
+        fetchInteresses();
         fetchClientes();
     }, []);
 
     return (
         <main>
             <>
-                <Header/>
+                <Header />
                 <main>
+                    <Grafico>
+                        <Chart
+                            chartType="PieChart"
+                            data={chartData}
+                            options={options}
+                            width={"100%"}
+                            height={"400px"}
+                        />
+                        <Chart
+                            chartType="ColumnChart"
+                            width="100%"
+                            height="400px"
+                            options={options2}
+                            data={data2}
+                        />
+                    </Grafico>
                     <h2 className="page-title">Últimos cadastros:</h2>
                     <table className="table table-hover">
                         <thead>
@@ -36,7 +110,7 @@ export default function PainelGeral() {
                                 <th>Nome</th>
                                 <th>CPF</th>
                                 <th>Endereço</th>
-                                <th>Cidade</th> 
+                                <th>Cidade</th>
                                 <th>Celular</th>
                                 <th>Aniversário</th>
                             </tr>
@@ -47,10 +121,10 @@ export default function PainelGeral() {
                                 .map((cliente) => (
                                     <tr key={cliente.id}>
                                         <td>{cliente.nome}</td>
-                                        <td>{cliente.cpf}</td>
+                                        <td>{insertMaskInCpf(cliente.cpf)}</td>
                                         <td>{cliente.rua}, {cliente.nres} - {cliente.bairro} {cliente.ap}</td>
                                         <td>{cliente.cidade}, {cliente.estado}</td>
-                                        <td>{cliente.celular}</td>
+                                        <td>{insertMaskInPhone(cliente.celular)}</td>
                                         <td>{formatter.format(new Date(cliente.aniversario))}</td>
                                     </tr>
                                 ))}
