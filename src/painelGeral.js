@@ -17,39 +17,43 @@ const Grafico = styled.div`
     justify-content: space-around
 `;
 
-const Data = styled.div`
-    margin-left: 10px;
-`;
-
 export const options = {
     title: "Maiores interesses",
     is3D: true,
 };
 
-export const data2 = [
-    ["Data", "Quantidade", { role: "style" }],
-    ["01/2024", 25, "#0099C6"],
-    ["02/2024", 45, "#0099C6"],
-    ["03/2024", 34, "#0099C6"],
-];
-
 export const options2 = {
-    title: "Clientes"
+    title: "Clientes cadastrados nos últimos 3 meses",
 };
 
 export default function PainelGeral() {
     const [clientes, setClientes] = useState([])
     const [chartData, setChartData] = useState([["Interesses", "Quantidade"]]);
+    const [chartData2 , setChartData2] = useState([["Data", "Quantidade", { role: "style" }]]);
 
     useEffect(() => {
         const fetchClientes = async () => {
             try {
                 const { data, error } = await supabase
                     .from("clientes")
-                    .select("id, nome, cpf, rua, bairro, cidade, estado, nres, aniversario, ap, celular");
+                    .select("id, nome, cpf, rua, bairro, cidade, estado, nres, aniversario, ap, celular, created_at");
                 if (error) {
                     throw error;
                 }
+                const chartData2 = data.reduce((acc, cliente) => {
+                    const data = new Date(cliente.created_at);
+                    const month = data.getMonth() + 1;
+                    const year = data.getFullYear();
+                    const label = `${month}/${year}`;
+                    const index = acc.findIndex(([name]) => name === label);
+                    if (index === -1) {
+                        acc.push([label, 1, "#0099C6"]);
+                    } else {
+                        acc[index][1]++;
+                    }
+                    return acc;
+                }, [["Data", "Quantidade", { role: "style" }]]);
+                setChartData2(chartData2);
                 setClientes(data.reverse());
             } catch (error) {
                 console.error("Erro ao buscar clientes:", error.message);
@@ -100,7 +104,7 @@ export default function PainelGeral() {
                             width="100%"
                             height="400px"
                             options={options2}
-                            data={data2}
+                            data={chartData2}
                         />
                     </Grafico>
                     <h2 className="page-title">Últimos cadastros:</h2>
