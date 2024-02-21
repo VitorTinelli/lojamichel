@@ -99,6 +99,16 @@ export default function Clientes() {
     if (error) {
       console.log("Erro ao inserir clientes:", error.message)
     }
+    setNewCliente("")
+    setNewCPF("")
+    setNewRua("")
+    setNewBairro("")
+    setNewCidade("")
+    setNewEstado("")
+    setNewNRES("")
+    setNewAP("")
+    setNewCelular("")
+    setNewNascimento("")
     setAnyChange(!anyChange)
     setIsModalNewOpen(!isModalNewOpen)
   }
@@ -106,6 +116,16 @@ export default function Clientes() {
   const editarCliente = (cliente) => {
     setIsModalOpen(true)
     setSelectedCliente(cliente)
+    setChangeCliente(cliente.nome);
+    setChangeCPF(cliente.cpf);
+    setChangeRua(cliente.rua);
+    setChangeBairro(cliente.bairro);
+    setChangeCidade(cliente.cidade);
+    setChangeEstado(cliente.estado);
+    setChangeNRES(cliente.nres);
+    setChangeAP(cliente.ap);
+    setChangeCelular(cliente.celular);
+    setChangeNascimento(cliente.aniversario);
   }
 
   const handleAddInteresseClick = () => {
@@ -364,7 +384,7 @@ export default function Clientes() {
                               id="clientes"
                               placeholder="cliente"
                               required
-                              value={changeCliente !== null && changeCliente !== undefined && changeCliente !== "" ? changeCliente : (selectedCliente && selectedCliente.nome)}
+                              value={changeCliente !== null && changeCliente !== undefined && changeCliente !== "" ? changeCliente : ""}
                               onChange={(e) => setChangeCliente(e.target.value)}
                               className="input"
                             />                          </div>
@@ -381,7 +401,7 @@ export default function Clientes() {
                               id="CPF"
                               placeholder="CPF"
                               required
-                              value={changeCPF !== null && changeCPF !== undefined && changeCPF !== "" ? changeCPF : (selectedCliente && selectedCliente.cpf)}
+                              value={changeCPF !== null && changeCPF !== undefined && changeCPF !== "" ? changeCPF : ""}
                               onChange={(e) => setChangeCPF(e.target.value)}
                               className="input"
                             />
@@ -391,7 +411,7 @@ export default function Clientes() {
                               id='aniversario'
                               placeholder="Nascimento"
                               required
-                              value={changeNascimento !== null && changeNascimento !== undefined ? changeNascimento : (selectedCliente && selectedCliente.aniversario)}
+                              value={changeNascimento !== null && changeNascimento !== undefined ? changeNascimento : ""}
                               onChange={(e) => setChangeNascimento(e.target.value)}
                               className="input"
                             />
@@ -408,7 +428,7 @@ export default function Clientes() {
                               id="rua"
                               placeholder="Rua"
                               required
-                              value={changeRua !== null && changeRua !== undefined && changeRua !== ""? changeRua : (selectedCliente && selectedCliente.rua)}
+                              value={changeRua !== null && changeRua !== undefined && changeRua !== ""? changeRua : ""}
                               onChange={(e) => setChangeRua(e.target.value)}
                               className="input"
                             />
@@ -418,7 +438,7 @@ export default function Clientes() {
                               id="numero"
                               placeholder="Numero da Residência"
                               required
-                              value={changeNRES !== null && changeNRES !== undefined && changeNRES !== "" ? changeNRES : (selectedCliente && selectedCliente.nres)}
+                              value={changeNRES !== null && changeNRES !== undefined && changeNRES !== "" ? changeNRES : ""}
                               onChange={(e) => setChangeNRES(e.target.value)}
                               className="input"
                             />
@@ -437,7 +457,7 @@ export default function Clientes() {
                               id="Bairro"
                               placeholder="Bairro"
                               required
-                              value={changeBairro !== null && changeBairro !== undefined && changeBairro !== "" ? changeBairro : (selectedCliente && selectedCliente.bairro)}
+                              value={changeBairro !== null && changeBairro !== undefined && changeBairro !== "" ? changeBairro : ""}
                               onChange={(e) => setChangeBairro(e.target.value)}
                               className="input"
                             />
@@ -447,7 +467,7 @@ export default function Clientes() {
                               id="AP"
                               placeholder="AP"
                               required
-                              value={changeAP !== null && changeAP !== undefined && changeAP !== "" ? changeAP : (selectedCliente && selectedCliente.ap)}
+                              value={changeAP !== null && changeAP !== undefined && changeAP !== "" ? changeAP : ""}
                               onChange={(e) => setChangeAP(e.target.value)}
                               className="input"
                             />
@@ -462,7 +482,7 @@ export default function Clientes() {
                               id="cidade"
                               placeholder="cidade"
                               required
-                              value={changeCidade !== null && changeCidade !== undefined && changeCidade !== "" ? changeCidade : (selectedCliente && selectedCliente.cidade)}
+                              value={changeCidade !== null && changeCidade !== undefined && changeCidade !== "" ? changeCidade : ""}
                               onChange={(e) => setChangeCidade(e.target.value)}
                               className="input"
                             />
@@ -477,7 +497,7 @@ export default function Clientes() {
                               id="Estado"
                               placeholder="Estado"
                               required
-                              value={changeEstado !== null && changeEstado !== undefined && changeEstado !== ""? changeEstado : (selectedCliente && selectedCliente.estado)}
+                              value={changeEstado !== null && changeEstado !== undefined && changeEstado !== ""? changeEstado : ""}
                               onChange={(e) => setChangeEstado(e.target.value.toUpperCase())}
                               className="input"
                             />
@@ -490,7 +510,7 @@ export default function Clientes() {
                               name="Celular"
                               id="Celular"
                               placeholder="Celular"
-                              value={changeCelular !== null && changeCelular !== undefined &&changeCelular !== "" ? changeCelular : (selectedCliente && selectedCliente.celular)}
+                              value={changeCelular !== null && changeCelular !== undefined &&changeCelular !== "" ? changeCelular : ""}
                               onChange={(e) => setChangeCelular(e.target.value)}
                               className="input"
                             />
