@@ -426,3 +426,9 @@ nav.open {
 #search {
   margin-bottom: 1dvh;
 }
+
+.notificacao-content{
+  margin: 5dvh;
+  white-space: pre-line;
+  max-width: 50dvw;
+}

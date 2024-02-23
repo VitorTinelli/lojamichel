@@ -7,6 +7,7 @@ import Interesses from './interesses';
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import PainelGeral from './painelGeral';
 import Clientes from './Clientes';
+import Notificacoes from './notificacoes';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: '/clientes',
         element: <Clientes/>,
+      },
+      {
+        path: '/notificacoes',
+        element: <Notificacoes/>,
       },
     ]
   }

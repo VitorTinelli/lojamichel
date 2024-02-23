@@ -99,6 +99,7 @@ export default function Clientes() {
     if (error) {
       console.log("Erro ao inserir clientes:", error.message)
     }
+    
     setNewCliente("")
     setNewCPF("")
     setNewRua("")
