@@ -54,7 +54,6 @@ export default function Header() {
                 .from('avisos')
                 .select('*')
                 .eq('status', false);
-            console.log(data)
             if (error) {
                 console.error(error);
             } else {

@@ -8,6 +8,7 @@ export default function Notificacoes() {
   const [notificacoes, setNotificacoes] = useState([])
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [anyChange, setAnyChange] = useState(false)
+  const [selectedAviso, setSelectedAviso] = useState([])
 
   ReactModal.setAppElement('#root')
 
@@ -19,27 +20,41 @@ export default function Notificacoes() {
       if (error) {
         console.error(error)
       } else {
-        setNotificacoes(data)
+        setNotificacoes(data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at) ))
       }
     }
     fetchNotificacoes()
     document.title = 'Notificacoes - Loja Michel'
+    console.log(selectedAviso)
   }
-    , [anyChange])
+    , [anyChange, selectedAviso])
 
   const abrirNotificacao = async (aviso) => {
     setModalIsOpen(true)
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('avisos')
         .update({ status: true })
+        .select('id, aviso, content, link, created_at')
         .eq('id', aviso)
       if (error) {
         console.error(error)
       } else {
         setAnyChange(!anyChange)
+        fetchSelectedAviso(aviso)
       }
     } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const fetchSelectedAviso = async (aviso) => {
+    const { data, error } = await supabase
+      .from('avisos')
+      .select('id, aviso, content, link, created_at')
+      .eq('id', aviso)
+    setSelectedAviso(data)
+    if (error) {
       console.error(error)
     }
   }
@@ -90,13 +105,25 @@ export default function Notificacoes() {
                         onRequestClose={() => setModalIsOpen(false)}
                       >
                         <div className='modal-container'>
-                          <h4>{notificacao.aviso} ({new Date(notificacao.created_at).toLocaleDateString()})</h4>
-                          <p className='notificacao-content'> {notificacao.content}</p>
-                          <p> {notificacao.link}</p>
+                          <h4>{selectedAviso[0]?.aviso} ({new Date(selectedAviso[0]?.created_at).toLocaleDateString()})</h4>
+                          <p className='notificacao-content'>{selectedAviso[0]?.content}</p>
+                          <a className='nitificacao-content'>{selectedAviso[0]?.link}</a>
                           <button onClick={() => setModalIsOpen(false)} className='buttonActionCancel'>Fechar</button>
                         </div>
                       </ReactModal>
-                      <button className='buttonActionCancel'>
+                      <button className='buttonActionCancel' onClick={
+                        async () => {
+                          const { error } = await supabase
+                            .from('avisos')
+                            .delete()
+                            .eq('id', notificacao.id)
+                          if (error) {
+                            console.error(error)
+                          } else {
+                            setAnyChange(!anyChange)
+                          }
+                        }
+                      }>
                         Excluir
                       </button>
                     </div>
