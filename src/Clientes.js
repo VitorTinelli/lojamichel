@@ -163,6 +163,7 @@ export default function Clientes() {
       console.log(data)
     } catch (error) {
       console.error("Erro ao buscar interesses:", error.message);
+      console.log("teste alteracao")
     }
   };
 
