@@ -97,7 +97,7 @@ export default function Clientes() {
       ])
       .select()
     if (error) {
-      console.log("Erro ao inserir clientes:", error.message)
+      console.error("Erro ao inserir clientes:", error.message)
     }
     
     setNewCliente("")
@@ -160,10 +160,9 @@ export default function Clientes() {
         throw error;
       }
       setInteresses(data.sort((a, b) => a.id - b.id));
-      console.log(data)
+      //console.log(data)
     } catch (error) {
       console.error("Erro ao buscar interesses:", error.message);
-      console.log("teste alteracao")
     }
   };
 

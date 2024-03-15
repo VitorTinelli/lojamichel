@@ -25,7 +25,6 @@ export default function Notificacoes() {
     }
     fetchNotificacoes()
     document.title = 'Notificacoes - Loja Michel'
-    console.log(selectedAviso)
   }
     , [anyChange, selectedAviso])
 

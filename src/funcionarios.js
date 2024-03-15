@@ -78,7 +78,7 @@ export default function Funcionarios() {
             ])
             .select()
         if (error) {
-            console.log("Erro ao inserir vendedores:", error.message)
+            console.error("Erro ao inserir vendedores:", error.message)
         }
         setIsModalNewOpen(!isModalNewOpen)
         setNewComissao()
